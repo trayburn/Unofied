@@ -1,13 +1,14 @@
 package com.improving.players;
 
 import com.improving.game.*;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
 import static java.util.stream.Collectors.toMap;
 
+@Component
 public class RachelPlayer implements IPlayer {
 
     private final ArrayList<Card> hand = new ArrayList<>();
@@ -30,9 +31,13 @@ public class RachelPlayer implements IPlayer {
     }
 
     @Override
-    public void newHand(List<Card>cards){
+    public void newHand(List<Card>hand){
         this.hand.clear();
-        this.hand.addAll(cards);
+        this.hand.addAll(hand);
+    }
+    @Override
+    public List<Card> getHand(){
+        return this.hand;
     }
 
     @Override
