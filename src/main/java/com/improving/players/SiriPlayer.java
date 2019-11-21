@@ -12,7 +12,7 @@ public class SiriPlayer implements IPlayer {
         List<Card> myHand;
         int id;
         Colors mostCommonColor;
-        String name;
+        String name = "Siri";
 
         public SiriPlayer(List<Card> myHand) {
             this.myHand = myHand;
@@ -65,7 +65,7 @@ public class SiriPlayer implements IPlayer {
                                     return;
                                 }
                                 {
-                                    game.playCard(e, null, this);
+                                    game.playCard(e, Optional.ofNullable(null), this);
                                     return;
                                 }
                             }
@@ -79,7 +79,7 @@ public class SiriPlayer implements IPlayer {
                         game.playCard(findBestSuggestedCard(), Optional.of(Colors.Wild), this);
                         return;
                     } else {
-                        game.playCard(findBestSuggestedCard(), null, this);
+                        game.playCard(findBestSuggestedCard(), Optional.ofNullable(null), this);
                         return;
                     }
                 }
@@ -89,7 +89,7 @@ public class SiriPlayer implements IPlayer {
                             game.playCard(e, Optional.of(getMostCommonColor()), this);
                             return;
                         } else {
-                            game.playCard(e, null, this);
+                            game.playCard(e, Optional.ofNullable(null), this);
                             return;
                         }
                     }
@@ -102,7 +102,8 @@ public class SiriPlayer implements IPlayer {
 
         @Override
         public void newHand(List<Card> cards) {
-
+            this.myHand.clear();
+            this.myHand.addAll(cards);
         }
 
         public int playBasedOnPlayers(int previous, int next, int nextnext) {
