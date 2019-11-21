@@ -59,7 +59,7 @@ public class SiriPlayer implements IPlayer {
                     for(Card e: myHand) {
                         if((e.getFace() == Faces.Reverse) || (e.getFace() == Faces.Draw_4) || (e.getFace() == Faces.Draw_2)) {
                             if(game.isPlayable(e)) {
-                                //    System.out.println("PLaying a strategic card!");
+
                                 if(e.getColor() == Colors.Wild) {
                                     game.playCard(e, Optional.of(getMostCommonColor()), this);
                                     return;
