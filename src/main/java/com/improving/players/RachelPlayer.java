@@ -77,16 +77,26 @@ public class RachelPlayer implements IPlayer {
     }
 
     public void playCard(Card card, IGame game) {
-        Colors declaredcolor = declareColor(card,game);
+        Colors declaredcolor = card.getColor();
+        if(getOptimalColor(game)!=null){
+            declaredcolor =getOptimalColor(game);
+        }else {
+            declaredcolor = declareColor(card, game);
+        }
         hand.remove(card);
-        game.playCard(card, java.util.Optional.ofNullable(declaredcolor), this);
+        if (card.getColor()==Colors.Wild) {
+            game.playCard(card, java.util.Optional.ofNullable(declaredcolor), this);
+        }
+        else{
+            game.playCard(card,java.util.Optional.ofNullable(null),this);
+        }
     }
 
     //color to declare based on the state of the game
     public Colors declareColor(Card card, IGame game) {
         //keeping game in here because I'm going to add code to choose the ideal
 
-        Colors declaredColor = null;
+        var declaredColor = card.getColor();
         ArrayList<Colors> randomColors = new ArrayList<>();
         randomColors.add(Colors.Red);
         randomColors.add(Colors.Blue);
