@@ -196,6 +196,10 @@ public class Game implements IGame {
     public IDeck getDeckInfo() {return this.deck;};
 
 
+    public List<IPlayer> getPlayers() {
+        return players;
+    }
+
     @Override
     public List<IPlayerInfo> getPlayerInfo() {
         List<IPlayerInfo> playerInfo = new ArrayList<>();
