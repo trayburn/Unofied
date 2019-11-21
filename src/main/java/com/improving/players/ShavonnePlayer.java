@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-@Component
+//@Component
 public class ShavonnePlayer implements IPlayer {
         private List<Card> hand = new ArrayList<>();
         private final Logger logger;

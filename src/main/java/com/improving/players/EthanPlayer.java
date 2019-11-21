@@ -21,7 +21,7 @@ public class EthanPlayer implements IPlayer {
 
     @Override
     public void takeTurn(IGame game) {
-        var card = pickCard(game);
+        var card = pickDrawCardLast(game);
         card = card == null ? pickFirstPlayableCard(game) : card;
 
 
@@ -39,6 +39,27 @@ public class EthanPlayer implements IPlayer {
 
     }
 
+    private void playCard(IGame game, Card card) {
+        Colors declaredColor = getBestColor(game) == null ? chooseColor(card) : getBestColor(game);
+        if (!card.getColor().equals(Colors.Wild)) declaredColor = null;
+        hand.remove(card);
+        game.playCard(card, Optional.ofNullable(declaredColor), this);
+    }
+
+    private Card pickCard(IGame game) {
+        Colors topPlayableColor = getBestColor(game);
+        var playableCards = hand.stream().filter(game::isPlayable);
+        return playableCards.filter(c -> c.getColor() == topPlayableColor)
+                .max(Comparator.comparing(c -> c.getFace().getValue())).orElse(null);
+    }
+
+    private Card pickDrawCardLast(IGame game) {
+        var playableCards = hand.stream().filter(game::isPlayable);
+        List<Card> sorted = playableCards.sorted((c, x) -> c.getFace().getValue()) // incompatible parameter types
+                .collect(Collectors.toList());
+        return sorted.isEmpty() ? null : sorted.get(0);
+    }
+
     private Card pickFirstPlayableCard(IGame game) {
         for (var card : hand) {
             if (game.isPlayable(card)) {
@@ -48,12 +69,7 @@ public class EthanPlayer implements IPlayer {
         return null;
     }
 
-    private void playCard(IGame game, Card card) {
-        Colors declaredColor = chooseColor(card);
-        if (!card.getColor().equals(Colors.Wild)) declaredColor = null;
-        hand.remove(card);
-        game.playCard(card, Optional.ofNullable(declaredColor), this);
-    }
+
 
     public Colors chooseColor(Card card) {
         var realColors = Arrays.stream(Colors.values()).filter(c -> c.ordinal() < 5)
@@ -72,6 +88,27 @@ public class EthanPlayer implements IPlayer {
         return card.getColor();
     }
 
+    private Colors getBestColor(IGame game) {
+        Map<Colors, Integer> colorRank = new HashMap<>();
+        var anyWild = hand.stream().anyMatch(c -> c.getFace().getValue() == 50);
+        var playableColors = anyWild ? getRealColors() :
+                hand.stream().filter(game::isPlayable)
+                        .map(Card::getColor).distinct().collect(Collectors.toList());
+        for (Colors color : playableColors) {
+            colorRank.put(color, countCardsByColor(color));
+        }
+
+        // If NoSuchElement, return null
+        if (colorRank.isEmpty()) return null;
+        return Collections.max(colorRank.entrySet(), Comparator.comparingInt(Map.Entry::getValue)).getKey();
+    }
+
+    public int countCardsByColor(Colors color) {
+        var cards = new ArrayList<Card>();
+        for (var card : hand) if (card.getColor() == color) cards.add(card);
+        return cards.size();
+    }
+
     @Override
     public int handSize() {
         return hand.size();
@@ -86,34 +123,6 @@ public class EthanPlayer implements IPlayer {
 
     public String getName() {
         return name;
-    }
-
-    public int countCardsByColor(Colors color) {
-        var cards = new ArrayList<Card>();
-        for (var card : hand) if (card.getColor() == color) cards.add(card);
-        return cards.size();
-    }
-
-    protected Card pickCard(IGame game) {
-        Colors topPlayableColor = getBestColor(game);
-        var playableCards = hand.stream().filter(game::isPlayable);
-        return playableCards.filter(c -> c.getColor() == topPlayableColor)
-                .max(Comparator.comparing(c -> c.getFace().getValue())).orElse(null);
-    }
-
-    private Colors getBestColor(IGame game) {
-        Map<Colors, Integer> colorRank = new HashMap<>();
-        var anyWild = hand.stream().anyMatch(c -> c.getFace().getValue() == 50);
-        var playableColors = anyWild ? getRealColors() :
-                hand.stream().filter(game::isPlayable)
-                        .map(Card::getColor).distinct().collect(Collectors.toList());
-        for (Colors color : playableColors) {
-            colorRank.put(color, countCardsByColor(color));
-        }
-
-        // If NoSuchElement, return null
-        if (colorRank.isEmpty()) return null;
-        return Collections.max(colorRank.entrySet(), Comparator.comparingInt(Map.Entry::getValue)).getKey();
     }
 
     @Override
