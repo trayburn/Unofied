@@ -7,7 +7,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-
+@Component
 public class SiriPlayer implements IPlayer {
         List<Card> myHand;
         int id;
@@ -55,16 +55,31 @@ public class SiriPlayer implements IPlayer {
         public void takeTurn(IGame game) {
             if(!this.myHand.isEmpty()) {
                 int playBasedOnPlayer = playBasedOnPlayers(game.getPreviousPlayer().handSize(),game.getNextPlayer().handSize(), game.getNextNextPlayer().handSize());
+
+
+                if(game.isPlayable(findBestSuggestedCard())) {
+                    var card = findBestSuggestedCard();
+                    //     System.out.println("Playing my best card!");
+                    myHand.remove(card);
+                    if (card.getColor() == Colors.Wild) {
+                        game.playCard(card, Optional.of(Colors.Wild), this);
+                        return;
+                    } else {
+                        game.playCard(card, Optional.ofNullable(null), this);
+                        return;
+                    }
+                }
                 if(playBasedOnPlayer == 1) {
                     for(Card e: myHand) {
                         if((e.getFace() == Faces.Reverse) || (e.getFace() == Faces.Draw_4) || (e.getFace() == Faces.Draw_2)) {
                             if(game.isPlayable(e)) {
 
                                 if(e.getColor() == Colors.Wild) {
+                                    myHand.remove(e);
                                     game.playCard(e, Optional.of(getMostCommonColor()), this);
                                     return;
-                                }
-                                {
+                                } else {
+                                    myHand.remove(e);
                                     game.playCard(e, Optional.ofNullable(null), this);
                                     return;
                                 }
@@ -72,19 +87,9 @@ public class SiriPlayer implements IPlayer {
                         }
                     }
                 }
-
-                if(game.isPlayable(findBestSuggestedCard())) {
-                    //     System.out.println("Playing my best card!");
-                    if (findBestSuggestedCard().getColor() == Colors.Wild) {
-                        game.playCard(findBestSuggestedCard(), Optional.of(Colors.Wild), this);
-                        return;
-                    } else {
-                        game.playCard(findBestSuggestedCard(), Optional.ofNullable(null), this);
-                        return;
-                    }
-                }
                 for(Card e: myHand) {
                     if(game.isPlayable(e)) {
+                        myHand.remove(e);
                         if (e.getColor() == Colors.Wild) {
                             game.playCard(e, Optional.of(getMostCommonColor()), this);
                             return;
@@ -106,12 +111,7 @@ public class SiriPlayer implements IPlayer {
             this.myHand.addAll(cards);
         }
 
-    @Override
-    public List<Card> getHand() {
-        return myHand;
-    }
-
-    public int playBasedOnPlayers(int previous, int next, int nextnext) {
+        public int playBasedOnPlayers(int previous, int next, int nextnext) {
             if(next <=2) {
                 //      System.out.println("Watch out, next player is almost going to win!");
                 return 1;
