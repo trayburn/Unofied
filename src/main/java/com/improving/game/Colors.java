@@ -8,7 +8,7 @@ public enum Colors {
     Wild ("wild",5);
 
     private final String colorName;
-    public final int pointValue;
+    private final int pointValue;
     Colors(String colorName, int pointValue) {
 
         this.colorName = colorName;
@@ -19,9 +19,10 @@ public enum Colors {
         return colorName;
     }
 
-    public Object getPointValue() {
+    public int getPointValue() {
         return pointValue;
     }
+
 
 
 }

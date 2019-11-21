@@ -25,7 +25,9 @@ public class EmilyPlayer implements IPlayer {
 
     @Override
     public Card draw(IGame iGame) {
-        handCards.add(iGame.draw());
+        if(iGame.draw() != null) {
+            handCards.add(iGame.draw());
+        }
         return iGame.draw();
     }
 
@@ -34,6 +36,7 @@ public class EmilyPlayer implements IPlayer {
         for(var card: handCards) {
             filterCard(handCards);
             int handSize = iGame.getNextPlayer().handSize();
+            int prevSize = iGame.getNextPlayer().handSize();
             if( handSize <= 2 && checkWildCard(handCards)) {
                 var wildCard = handCards.stream().filter(c->c.getColor() == Colors.Wild).findFirst().get();
                 playCard(wildCard,iGame);
@@ -41,19 +44,19 @@ public class EmilyPlayer implements IPlayer {
             }
 
             if(iGame.isPlayable(card)) {
-                if(handSize <=2 && checkSkipCard(handCards)){
+                if(handSize <= 2 && checkSkipCard(handCards)){
                     var skipCard = handCards.stream().filter(c->c.getFace() == Faces.Skip).findFirst().get();
                     playCard(skipCard, iGame);
                     return;
                 }
 
-                if(handSize <=2 && checkReverseCard(handCards)){
+                if(handSize <= 2 && prevSize >2 && checkReverseCard(handCards)){
                     var reverseCard = handCards.stream().filter(c->c.getFace() == Faces.Reverse).findFirst().get();
                     playCard(reverseCard, iGame);
                     return;
                 }
 
-                if(handSize <=2 && checkDrawTwoCard(handCards)){
+                if(handSize <= 2 && checkDrawTwoCard(handCards)){
                     var drawTwoCard = handCards.stream().filter(c->c.getFace() == Faces.Draw_2).findFirst().get();
                     playCard(drawTwoCard, iGame);
                     return;
@@ -88,7 +91,7 @@ public class EmilyPlayer implements IPlayer {
 
     @Override
     public String getName() {
-        return "Emily's smart player";
+        return "Emily";
     }
 
     public void playCard(Card card, IGame game) {
@@ -134,7 +137,7 @@ public class EmilyPlayer implements IPlayer {
         private List filterCard (List<Card> hand) {
             hand = hand.stream()
                     .sorted(Comparator.comparingInt(card -> card.getFace().getPointValue()))
-                    .sorted(Comparator.comparing(card -> card.getColor().pointValue))
+                    .sorted(Comparator.comparing(card -> card.getColor().getPointValue()))
                     .collect(Collectors.toList());
             return hand;
 
