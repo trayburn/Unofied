@@ -82,14 +82,14 @@ public class Deck implements IDeck {
             discardPile.clear();
             discardPile.add(topCard);
         }
-        shuffle(drawPile);
+        shuffle();
         var newCard = drawPile.get(0);
         drawPile.remove(newCard);
         return newCard;
 
     }
 
-    public void shuffle(List<Card> drawPile) {
+    public void shuffle() {
         Collections.shuffle(drawPile);
     }
 }

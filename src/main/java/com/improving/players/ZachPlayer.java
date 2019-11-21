@@ -26,7 +26,7 @@ public class ZachPlayer implements IPlayer {
         }
 
         //play normal if next player has at least 3 cards left
-        if(ableToScrewOtherPlayer == false){
+        if (ableToScrewOtherPlayer == false) {
             for (Card card : cardsWithMostCommonColor) {
                 if (iGame.isPlayable(card)) {
                     prepPlayReport(card, iGame);
@@ -122,7 +122,7 @@ public class ZachPlayer implements IPlayer {
         Card skipCard = hand.stream().filter(card -> card.getFace().equals(Faces.Skip)).findFirst().orElse(null);
         Card reverseCard = hand.stream().filter(card -> card.getFace().equals(Faces.Reverse)).findFirst().orElse(null);
 
-        if ((iGame.getPlayerInfo().size() > 2 && iGame.getNextNextPlayer().handSize() > 2) || (iGame.getPlayerInfo().size() <=2)) {
+        if ((iGame.getPlayerInfo().size() > 2 && iGame.getNextNextPlayer().handSize() > 2) || (iGame.getPlayerInfo().size() <= 2)) {
             if (draw4Card != null) {
                 prepPlayReport(draw4Card, iGame);
                 return true;
@@ -136,22 +136,21 @@ public class ZachPlayer implements IPlayer {
                 prepPlayReport(reverseCard, iGame);
                 return true;
             }
-        }
-        else {
+        } else {
             if (reverseCard != null && iGame.isPlayable(reverseCard)) {
-                    prepPlayReport(reverseCard, iGame);
-                    return true;
+                prepPlayReport(reverseCard, iGame);
+                return true;
             } else if (draw4Card != null) {
-                    prepPlayReport(draw4Card, iGame);
-                    return true;
+                prepPlayReport(draw4Card, iGame);
+                return true;
             } else if (draw2Card != null && iGame.isPlayable(draw2Card)) {
-                    prepPlayReport(draw2Card, iGame);
-                    return true;
+                prepPlayReport(draw2Card, iGame);
+                return true;
             } else if (skipCard != null && iGame.isPlayable(skipCard)) {
-                    prepPlayReport(skipCard, iGame);
-                    return true;
+                prepPlayReport(skipCard, iGame);
+                return true;
             }
-         }
+        }
         return false;
     }
 
