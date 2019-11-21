@@ -11,13 +11,11 @@ import java.util.Optional;
 public class AnilPlayer implements IPlayer {
 
         LinkedList<Card> hand;
-        private String name;
         private java.util.List<Optional> chooseColor;
 
 
-        public AnilPlayer(String name, Deck deck) {
+        public AnilPlayer(Deck deck) {
             this.hand = new LinkedList<>();
-            this.name = name;
             dealHand(deck);
         }
 
@@ -37,12 +35,10 @@ public class AnilPlayer implements IPlayer {
                 if (game.isPlayable(card)) {
                     hand.remove(card);
                     game.playCard(card, Optional.of(Colors.Red), this);
-                    System.out.println(card + " was played ");
                     return;
                 }
             }
             hand.add(draw(game));
-            System.out.println("Drew card");
         }
 
         public void playHighestValue(IGame game) {
@@ -54,7 +50,7 @@ public class AnilPlayer implements IPlayer {
 
 
         public String getName() {
-            return name;
+            return "Anil";
         }
 
         @Override
