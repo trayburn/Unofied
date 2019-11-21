@@ -9,8 +9,7 @@ import java.util.*;
 public class Game implements IGame {
     private Deck deck;
     private final List<IPlayer> players = new ArrayList<>();
-    private TopCard topCard = new TopCard();
-    private int numPlayers;
+    private TopCard topCard;
     private int turnDirection = 1;
     private int turnEngine = 0;
     private boolean gameInProgress = true;
@@ -23,28 +22,26 @@ public class Game implements IGame {
     }
 
     public void play() {
+        turnEngine = 0;
+        turnDirection = 1;
         winningPlayer = null;
         gameInProgress = true;
         deck = new Deck();
-        for(var p : players) {
+        arrangeStartingDeck(deck);
+
+        for (var p : players) {
             p.newHand(getStartingHand(deck));
         }
-        numPlayers = players.size();
 
-        arrangeStartingDeck(deck);
         logger.println("Top Card on Discard Pile: " + topCard.toString());
 
         if (hasAction(topCard.getCard())) {
             executeCardAction(topCard.getCard(), this, 0);
         }
 
-        numPlayers = players.size();
         while (gameInProgress) {
-            if (turnEngine < 0) {
-                turnEngine = turnEngine + numPlayers;
-            }
-            int currentPlayer = turnEngine % numPlayers;
-            var player = players.get(currentPlayer);
+            var player = players.get(playerIndex(0));
+            logger.println("---- " + player.getName());
 
             player.takeTurn(this);
 
@@ -64,9 +61,9 @@ public class Game implements IGame {
 
     private void arrangeStartingDeck(Deck deck) {
         this.deck = deck;
-        deck.shuffle(deck.getDrawPile());
+        deck.shuffle();
         Card firstCard = deck.draw();
-        setTopCard(firstCard, firstCard.getColor());
+        this.topCard = new TopCard(logger, firstCard, firstCard.getColor());
         deck.getDiscardPile().add(topCard.getCard());
     }
 
@@ -79,31 +76,15 @@ public class Game implements IGame {
         return hand;
     }
 
-    private void setTopCard(Card card, Colors declaredColor) {
-        topCard.setCard(card);
-
-        if (declaredColor.toString().equalsIgnoreCase("Wild")) {
-            Random random = new Random();
-            int number = random.nextInt(4);
-            if (number == 0) {
-                declaredColor = Colors.Red;
-            } else if (number == 1) {
-                declaredColor = Colors.Green;
-            } else if (number == 2) {
-                declaredColor = Colors.Blue;
-            } else if (number == 3) {
-                declaredColor = Colors.Yellow;
-            }
-        }
-        topCard.setDeclaredColor(declaredColor);
-    }
-
     @Override
     public boolean isPlayable(Card playerCard) {
+        if (playerCard.getColor() == Colors.Wild)
+            return true;
+        if (topCard.getDeclaredColor() != null) {
+            return playerCard.getColor().equals(topCard.getDeclaredColor());
+        }
         if (topCard.getCard().getColor().equals(playerCard.getColor())
-                || topCard.getCard().getFace().equals(playerCard.getFace())
-                || playerCard.getColor().equals(Colors.Wild)
-                || topCard.getCard().getColor().equals(Colors.Wild)) {
+                || topCard.getCard().getFace().equals(playerCard.getFace())) {
             return true;
         }
         return false;
@@ -138,36 +119,19 @@ public class Game implements IGame {
 
     }
 
-    private int getNextPlayerIndex() {
-        if (turnEngine <= 0) {
-            turnEngine = turnEngine + numPlayers;
-        }
-        return (turnEngine + turnDirection) % numPlayers;
-    }
-
     @Override
     public void playCard(Card card, Optional<Colors> declaredColor, IPlayerInfo player) {
-        if (declaredColor.isPresent())
-            logger.println(player.getName() + " has played a " + card.toString() + " calling " + declaredColor.get().getColorName());
-        else
-            logger.println(player.getName() + " has played a " + card.toString());
-        deck.getDiscardPile().add(card);
-        if (declaredColor.isPresent() == false) {
-            if (card.getColor().ordinal() != 5) {
-                topCard.setDeclaredColor(card.getColor());
-            } else {
-                topCard.setDeclaredColor(forcePickValidDeclaredColor());
-                topCard.setCard(card);
-            }
-        } else if (declaredColor.isPresent()) {
-            if (isValidDeclaredColor(declaredColor) == false) {
-                declaredColor = Optional.ofNullable(forcePickValidDeclaredColor());
-            }
-            topCard.setCard(card);
-            topCard.setDeclaredColor(declaredColor.orElseThrow());
+        if (card == topCard.getCard()) throw new RuntimeException("WTF!  The same card?!");
+
+
+        if (!card.getColor().equals(Colors.Wild)) {
+            declaredColor = Optional.empty();
         }
+        deck.getDiscardPile().add(card);
+        topCard.setCard(card, declaredColor.orElse(null), player);
+
         if (hasAction(card)) {
-            executeCardAction(card, this, getNextPlayerIndex());
+            executeCardAction(card, this, playerIndex(1));
         }
     }
 
@@ -182,18 +146,12 @@ public class Game implements IGame {
         return isValid;
     }
 
-    private Colors forcePickValidDeclaredColor() {
-        List<Colors> randomColors = new ArrayList<>();
-        randomColors.add(Colors.Blue);
-        randomColors.add(Colors.Red);
-        randomColors.add(Colors.Green);
-        randomColors.add(Colors.Yellow);
-        Collections.shuffle(randomColors);
-        logger.println("Invalid color declaration - random color chosen instead.");
-        return randomColors.get(0);
-    }
     @Override
-    public IDeck getDeckInfo() {return this.deck;};
+    public IDeck getDeckInfo() {
+        return this.deck;
+    }
+
+    ;
 
 
     public List<IPlayer> getPlayers() {
@@ -210,35 +168,40 @@ public class Game implements IGame {
         return playerInfo;
     }
 
+    public int playerIndex(int shift) {
+        var index = (turnEngine + (shift * turnDirection)) % players.size();
+        if (index < 0) index += players.size();
+        return index;
+    }
+
     @Override
     public IPlayer getNextPlayer() {
-        if (turnEngine <= 0) {
-            turnEngine = turnEngine + numPlayers;
-        }
-        var nextPlayer = (turnEngine + turnDirection) % numPlayers;
-        return players.get(nextPlayer);
+        return players.get(playerIndex(1));
     }
 
     @Override
     public IPlayer getPreviousPlayer() {
-        if (turnEngine <= 0) {
-            turnEngine = turnEngine + numPlayers;
-        }
-        var previousPlayer = (turnEngine + turnDirection - 1) % numPlayers;
-        return players.get(previousPlayer);
+        return players.get(playerIndex(-1));
     }
 
     @Override
     public IPlayer getNextNextPlayer() {
+        return players.get(playerIndex(2));
+    }
+
+    private int getNextPlayerIndex() {
         if (turnEngine <= 0) {
-            turnEngine = turnEngine + numPlayers;
+            turnEngine = turnEngine + players.size();
         }
-        var nextNextPlayer = (turnEngine + turnDirection + 1) % numPlayers;
-        return players.get(nextNextPlayer);
+        return (turnEngine + turnDirection) % players.size();
     }
 
     public IPlayerInfo getWinningPlayer() {
         return winningPlayer;
+    }
+
+    public void setTurnDirection(int direction) {
+        turnDirection = direction;
     }
 }
 

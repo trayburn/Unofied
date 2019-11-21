@@ -22,6 +22,8 @@ public class EthanPlayer implements IPlayer {
     @Override
     public void takeTurn(IGame game) {
         var card = pickCard(game);
+        card = card == null ? pickFirstPlayableCard(game) : card;
+
 
         // PickCard returns null if no card was playable
         if (card != null) {
@@ -37,13 +39,6 @@ public class EthanPlayer implements IPlayer {
 
     }
 
-    @Override
-    public void newHand(List<Card> hand) {
-        this.hand.clear();
-        this.hand.addAll(hand);
-    }
-
-
     private Card pickFirstPlayableCard(IGame game) {
         for (var card : hand) {
             if (game.isPlayable(card)) {
@@ -54,18 +49,13 @@ public class EthanPlayer implements IPlayer {
     }
 
     private void playCard(IGame game, Card card) {
-//        if (card.getFace().getValue() == 50) game.playCard(card, Optional.of(chooseColor(game)), this);
-//            // TODO: make color parameter optional.
-//        else game.playCard(card, Optional.of(chooseColor(game)), this);
-//        hand.remove(card);
-
-        Colors declaredColor = chooseColor(card, game);
+        Colors declaredColor = chooseColor(card);
         if (!card.getColor().equals(Colors.Wild)) declaredColor = null;
         hand.remove(card);
         game.playCard(card, Optional.ofNullable(declaredColor), this);
     }
 
-    public Colors chooseColor(Card card, IGame game) {
+    public Colors chooseColor(Card card) {
         var realColors = Arrays.stream(Colors.values()).filter(c -> c.ordinal() < 5)
                 .collect(Collectors.toList());
 
@@ -90,7 +80,7 @@ public class EthanPlayer implements IPlayer {
     @Override
     public Card draw(IGame game) {
         var drawnCard = game.draw();
-        // hand.add(drawnCard); // Because I want to win ;) (THIS IS A JOKE)
+        hand.add(drawnCard);
         return drawnCard;
     }
 
@@ -126,12 +116,15 @@ public class EthanPlayer implements IPlayer {
         return Collections.max(colorRank.entrySet(), Comparator.comparingInt(Map.Entry::getValue)).getKey();
     }
 
+    @Override
+    public void newHand(List<Card> hand) {
+        this.hand.clear();
+        this.hand.addAll(hand);
+    }
+
     public List<Colors> getRealColors() {
         return Arrays.stream(Colors.values()).filter(c -> c.ordinal() > 4)
                 .collect(Collectors.toList());
     }
 
-    public Colors chooseColor(IGame game) {
-        return getBestColor(game);
-    }
 }
