@@ -25,34 +25,17 @@ public class ShavonnePlayer implements IPlayer {
 
         @Override
         public void takeTurn(IGame iGame) {
-            if (handSize() == 1) {
-                logger.println("UNNNOOOO BIIIITTTCHHHHH");
-            }
-
             for (var playerCard : getHandCards()) {
                 if (iGame.isPlayable(playerCard)) {
-                    logger.println("");
-                    logger.println(playerCard + " was just played.");
-                    logger.println("--END TURN--");
-                    logger.println("~*~*~*~*~*~*~*~*~*~*~");
                     if (attackAttack(playerCard, iGame)) {
                         playCard(playerCard, iGame);
                     } else playCard(playerCard, iGame);
                     return;
                 }
             }
-            logger.println("Can't play! Gotta draw!");
-            logger.println("");
             var newCard = draw(iGame);
-            logger.println("[" + newCard.toString() + "] was drawn!");
             if (iGame.isPlayable(newCard)) {
                 playCard(newCard, iGame);
-                logger.println("The card was played - HOT DAMN!");
-                logger.println("--END TURN--");
-                logger.println("~*~*~*~*~*~*~*~*~*~*~");
-            } else {
-                logger.println("--END TURN--");
-                logger.println("~*~*~*~*~*~*~*~*~*~*~");
             }
         }
 

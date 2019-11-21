@@ -48,8 +48,6 @@ public class ZachPlayer implements IPlayer {
                 prepPlayReport(cardDrawn, iGame);
                 return;
             }
-            System.out.print("cards in hand for " + this.name + " : ");
-            System.out.println(hand.stream().map(card -> card.toString()).collect(Collectors.toList()));
         }
     }
 
@@ -163,14 +161,10 @@ public class ZachPlayer implements IPlayer {
             hand.remove(card);
             iGame.playCard(card, Optional.of(newColor), this);
 
-            System.out.print("cards in hand for " + this.name + " : ");
-            System.out.println(hand.stream().map(c -> c.toString()).collect(Collectors.toList()));
         } else {
             hand.remove(card);
             iGame.playCard(card, Optional.ofNullable(null), this);
 
-            System.out.print("cards in hand for " + this.name + " : ");
-            System.out.println(hand.stream().map(c -> c.toString()).collect(Collectors.toList()));
         }
     }
 }
