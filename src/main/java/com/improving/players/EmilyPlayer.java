@@ -9,7 +9,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Component
+
 public class EmilyPlayer implements IPlayer {
     private String name;
     private List<Card> handCards = new ArrayList<>();
@@ -79,6 +79,11 @@ public class EmilyPlayer implements IPlayer {
         this.handCards.clear();
         this.handCards.addAll(hand);
 
+    }
+
+    @Override
+    public List<Card> getHand() {
+        return handCards;
     }
 
     @Override
