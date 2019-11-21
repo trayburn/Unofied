@@ -1,15 +1,24 @@
 package com.improving;
 
 import com.improving.game.Game;
+import com.improving.players.ZachPlayer;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.util.HashMap;
+import java.util.Random;
 
 public class Application {
     public static void main(String[] args) {
         var context = new AnnotationConfigApplicationContext(SpringConfiguration.class);
         var game = context.getBean(Game.class);
         var wins = new HashMap<String, Integer>();
+        var random = new Random();
+
+        while(game.getPlayers().size() > 4) {
+            var rIndex = random.nextInt(game.getPlayers().size());
+            if (!game.getPlayers().get(rIndex).getClass().equals(ZachPlayer.class))
+                game.getPlayers().remove(rIndex);
+        }
 
         for(var p : game.getPlayerInfo()) {
             wins.put(p.getName(), 0);
