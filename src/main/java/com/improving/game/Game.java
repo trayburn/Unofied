@@ -121,18 +121,42 @@ public class Game implements IGame {
 
     @Override
     public void playCard(Card card, Optional<Colors> declaredColor, IPlayerInfo player) {
-        if (card == topCard.getCard()) throw new RuntimeException("WTF!  The same card?!");
-
-
-        if (!card.getColor().equals(Colors.Wild)) {
-            declaredColor = Optional.empty();
+        if (card == null)
+            throw new RuntimeException(player.getName() + " NULL card was played");
+        if (card == topCard.getCard())
+            throw new RuntimeException(player.getName() + " WTF!  The same card?!");
+        if (isPlayable(card) == false)
+            throw new RuntimeException(player.getName() + " This card is not playable!");
+        if ((card.getColor().equals(Colors.Wild) == false) && declaredColor.isPresent()) {
+            logger.println(card.toString() + " // DECLARING " + declaredColor.get());
+            throw new RuntimeException(player.getName() + " Declared a color without playing a Wild card!");
         }
+        if (((IPlayer)player).getHand().contains(card))
+            throw new RuntimeException(player.getName() + " Card is still in hand!");
+        if (deck.getAllCards().contains(card) == false)
+            throw new RuntimeException("This card was not originally in the deck!");
+
+        if (getSumOfCards() != 111)
+            throw new RuntimeException(getSumOfCards() + " A card has disappeared from the game.");
+
         deck.getDiscardPile().add(card);
         topCard.setCard(card, declaredColor.orElse(null), player);
+
+
+        if (getSumOfCards() != 112)
+            throw new RuntimeException(getSumOfCards() + " A card has disappeared from the game.");
 
         if (hasAction(card)) {
             executeCardAction(card, this, playerIndex(1));
         }
+
+        if (getSumOfCards() != 112)
+            throw new RuntimeException(getSumOfCards() + " A card has disappeared from the game.");
+
+    }
+
+    private int getSumOfCards() {
+        return (deck.getDrawPile().size() + deck.getDiscardPile().size() + players.stream().mapToInt(IPlayerInfo::handSize).sum());
     }
 
     private boolean isValidDeclaredColor(Optional<Colors> declaredColor) {

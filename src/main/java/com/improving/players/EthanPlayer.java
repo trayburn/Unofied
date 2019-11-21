@@ -122,6 +122,11 @@ public class EthanPlayer implements IPlayer {
         this.hand.addAll(hand);
     }
 
+    @Override
+    public List<Card> getHand() {
+        return hand;
+    }
+
     public List<Colors> getRealColors() {
         return Arrays.stream(Colors.values()).filter(c -> c.ordinal() > 4)
                 .collect(Collectors.toList());

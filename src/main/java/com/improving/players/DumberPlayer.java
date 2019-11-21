@@ -46,6 +46,11 @@ public class DumberPlayer implements IPlayer {
     }
 
     @Override
+    public List<Card> getHand() {
+        return handCards;
+    }
+
+    @Override
     public int handSize() {
         return handCards.size();
     }

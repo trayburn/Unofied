@@ -43,22 +43,26 @@ public class ZachPlayer implements IPlayer {
 
             //if CANNOT play then draw...if card matches top card on discardPile, if so play
             var cardDrawn = this.draw(iGame);
-            System.out.println(this.name + " drew a card");
-            if (iGame.isPlayable(cardDrawn)) {
-                prepPlayReport(cardDrawn, iGame);
-                return;
+
+            if(cardDrawn != null) {
+                if (iGame.isPlayable(cardDrawn)) {
+                    prepPlayReport(cardDrawn, iGame);
+                    return;
+                }
             }
         }
     }
 
-    private List<Card> getHand() {
+    public List<Card> getHand() {
         return hand;
     }
 
 
     public Card draw(IGame iGame) {
         var cardDrawn = iGame.draw();
-        hand.add(cardDrawn);
+        if(cardDrawn != null) {
+            hand.add(cardDrawn);
+        }
         return cardDrawn;
     }
 
@@ -122,7 +126,7 @@ public class ZachPlayer implements IPlayer {
         Card skipCard = hand.stream().filter(card -> card.getFace().equals(Faces.Skip)).findFirst().orElse(null);
         Card reverseCard = hand.stream().filter(card -> card.getFace().equals(Faces.Reverse)).findFirst().orElse(null);
 
-        if ((iGame.getPlayerInfo().size() > 2 && iGame.getNextNextPlayer().handSize() > 2) || (iGame.getPlayerInfo().size() <= 2)) {
+        if ((iGame.getPlayerInfo().size() > 2 && iGame.getNextNextPlayer().handSize() > 1) || (iGame.getPlayerInfo().size() <= 2)) {
             if (draw4Card != null) {
                 prepPlayReport(draw4Card, iGame);
                 return true;

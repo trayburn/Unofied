@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-@Component
+
 public class ShavonnePlayer implements IPlayer {
         private List<Card> hand = new ArrayList<>();
         private final Logger logger;
@@ -55,7 +55,12 @@ public class ShavonnePlayer implements IPlayer {
             this.hand.addAll(cards);
         }
 
-        @Override
+    @Override
+    public List<Card> getHand() {
+        return hand;
+    }
+
+    @Override
         public Card draw(IGame iGame) {
             var drawnCard = iGame.draw();
             hand.add(drawnCard);

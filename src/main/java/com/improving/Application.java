@@ -24,7 +24,7 @@ public class Application {
             wins.put(p.getName(), 0);
         }
 
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < 10; i++) {
             try {
                 game.play();
             } catch (Exception e) {
@@ -39,7 +39,20 @@ public class Application {
         }
 
         for (var key : wins.keySet()) {
-            System.out.println(key + "\t\t\t" + wins.get(key));
+            System.out.println(padRight(key, 30) + wins.get(key));
         }
+    }
+
+    private static String padRight(String inputString, int length) {
+        if (inputString.length() >= length) {
+            return inputString;
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append(inputString);
+        while (sb.length() < length) {
+            sb.append('.');
+        }
+
+        return sb.toString();
     }
 }

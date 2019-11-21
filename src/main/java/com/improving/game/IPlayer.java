@@ -9,5 +9,7 @@ public interface IPlayer extends IPlayerInfo {
     public void takeTurn(IGame iGame);
 
     public void newHand(List<Card> hand);
+
+    public List<Card> getHand();
 }
 
