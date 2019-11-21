@@ -9,7 +9,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
+@Component
 public class EmilyPlayer implements IPlayer {
     private String name;
     private List<Card> handCards = new ArrayList<>();
@@ -37,13 +37,15 @@ public class EmilyPlayer implements IPlayer {
             filterCard(handCards);
             int handSize = iGame.getNextPlayer().handSize();
             int prevSize = iGame.getNextPlayer().handSize();
-            if( handSize <= 2 && checkWildCard(handCards)) {
-                var wildCard = handCards.stream().filter(c->c.getColor() == Colors.Wild).findFirst().get();
-                playCard(wildCard,iGame);
-                return;
-            }
 
             if(iGame.isPlayable(card)) {
+
+                if( handSize <= 2 && checkWildCard(handCards)) {
+                    var wildCard = handCards.stream().filter(c->c.getColor() == Colors.Wild).findFirst().get();
+                    playCard(wildCard,iGame);
+                    return;
+                }
+
                 if(handSize <= 2 && checkSkipCard(handCards)){
                     var skipCard = handCards.stream().filter(c->c.getFace() == Faces.Skip).findFirst().get();
                     playCard(skipCard, iGame);
@@ -65,8 +67,8 @@ public class EmilyPlayer implements IPlayer {
                 playCard(card,iGame);
                 return;
             }
-        }
 
+        }
         var drawnCard = draw(iGame);
         if(iGame.isPlayable(drawnCard)) {
             playCard(drawnCard, iGame);
@@ -100,14 +102,14 @@ public class EmilyPlayer implements IPlayer {
     }
 
     public void playCard(Card card, IGame game) {
-        Colors declaredColor = declareColor(card,game);
+        Colors declaredColor = declareColor(card);
         handCards.remove(card);
-
         //declared color can be null
         game.playCard(card, java.util.Optional.ofNullable(declaredColor), this);
+
     }
 
-    public Colors declareColor(Card card, IGame game) {
+    public Colors declareColor(Card card) {
         var declaredColor = card.getColor();
         int numWildColorCardsinHand = 0;
         ArrayList<Colors> randomColors = new ArrayList<>();
@@ -117,7 +119,7 @@ public class EmilyPlayer implements IPlayer {
         randomColors.add(Colors.Yellow);
 
         if(randomColors.contains(declaredColor)){
-            declaredColor = card.getColor();
+            declaredColor = null;
         }else if (declaredColor.equals(Colors.Wild)) {
             numWildColorCardsinHand++;
             Collections.shuffle(randomColors);
