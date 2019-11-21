@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 @Component
 public class EmilyPlayer implements IPlayer {
     private String name;
-    private List<Card> handCards = new ArrayList<>();
+    private List<Card> handCards;
 
     public EmilyPlayer(List<Card> handCards) {
         this.handCards = handCards;
@@ -25,40 +25,42 @@ public class EmilyPlayer implements IPlayer {
 
     @Override
     public Card draw(IGame iGame) {
-        if(iGame.draw() != null) {
-            handCards.add(iGame.draw());
+        var drawCard = iGame.draw();
+        if(drawCard != null) {
+            handCards.add(drawCard);
         }
-        return iGame.draw();
+        return drawCard;
     }
 
     @Override
     public void takeTurn(IGame iGame) {
+        filterCard(handCards);
         for(var card: handCards) {
-            filterCard(handCards);
+            System.out.println("handcards are " + handCards);
             int handSize = iGame.getNextPlayer().handSize();
-            int prevSize = iGame.getNextPlayer().handSize();
+            //int prevSize = iGame.getPreviousPlayer().handSize();
 
             if(iGame.isPlayable(card)) {
 
-                if( handSize <= 2 && checkWildCard(handCards)) {
+                if( handSize <= 2  && checkWildCard(handCards)) {
                     var wildCard = handCards.stream().filter(c->c.getColor() == Colors.Wild).findFirst().get();
                     playCard(wildCard,iGame);
                     return;
                 }
 
-                if(handSize <= 2 && checkSkipCard(handCards)){
+                if(handSize <= 2  && checkSkipCard(handCards)){
                     var skipCard = handCards.stream().filter(c->c.getFace() == Faces.Skip).findFirst().get();
                     playCard(skipCard, iGame);
                     return;
                 }
 
-                if(handSize <= 2 && prevSize >2 && checkReverseCard(handCards)){
+                if(handSize <= 2   && checkReverseCard(handCards)){
                     var reverseCard = handCards.stream().filter(c->c.getFace() == Faces.Reverse).findFirst().get();
                     playCard(reverseCard, iGame);
                     return;
                 }
 
-                if(handSize <= 2 && checkDrawTwoCard(handCards)){
+                if(handSize <= 2  && checkDrawTwoCard(handCards)){
                     var drawTwoCard = handCards.stream().filter(c->c.getFace() == Faces.Draw_2).findFirst().get();
                     playCard(drawTwoCard, iGame);
                     return;
@@ -104,8 +106,11 @@ public class EmilyPlayer implements IPlayer {
     public void playCard(Card card, IGame game) {
         Colors declaredColor = declareColor(card);
         handCards.remove(card);
-        //declared color can be null
         game.playCard(card, java.util.Optional.ofNullable(declaredColor), this);
+
+
+        //declared color can be null
+
 
     }
 
