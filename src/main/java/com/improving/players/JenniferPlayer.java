@@ -78,15 +78,19 @@ public class JenniferPlayer implements IPlayer {
         if (yellowIsCommonColor() == true) {
 //            System.out.println(handCards);
             mostCommonColor = Colors.Yellow;
+            handCards.remove(card);
             game.playCard(card, Optional.of(mostCommonColor), this);
         } else if (redIsCommonColor() == true) {
             mostCommonColor = Colors.Red;
+            handCards.remove(card);
             game.playCard(card, Optional.of(mostCommonColor), this);
         } else if (greenIsCommonColor() == true) {
             mostCommonColor = Colors.Green;
+            handCards.remove(card);
             game.playCard(card, Optional.of(mostCommonColor), this);
         } else if (blueIsCommonColor() == true) {
             mostCommonColor = Colors.Blue;
+            handCards.remove(card);
             game.playCard(card, Optional.of(mostCommonColor), this);
         }
         return mostCommonColor;
@@ -101,15 +105,19 @@ public class JenniferPlayer implements IPlayer {
         for (Card card : handCards) {
             if (yellowIsCommonColor() == true) {
                 mostCommonColor = Colors.Yellow;
+                handCards.remove(card);
                 game.playCard(card, Optional.of(mostCommonColor), this);
             } else if (redIsCommonColor() == true) {
                 mostCommonColor = Colors.Red;
+                handCards.remove(card);
                 game.playCard(card, Optional.of(mostCommonColor), this);
             } else if (greenIsCommonColor() == true) {
                 mostCommonColor = Colors.Green;
+                handCards.remove(card);
                 game.playCard(card, Optional.of(mostCommonColor), this);
             } else if (blueIsCommonColor() == true) {
                 mostCommonColor = Colors.Blue;
+                handCards.remove(card);
                 game.playCard(card, Optional.of(mostCommonColor), this);
             }
             return;
@@ -119,6 +127,7 @@ public class JenniferPlayer implements IPlayer {
 
     private void smartMove_MakeNextPlayerDrawIfUno(IGame game, Card card) {
         if (handCards.contains(Faces.Draw_2) || handCards.contains(Faces.Draw_4)) {
+            handCards.remove(card);
             game.playCard(card, Optional.of(choseWildColor(game, card)), this);
         }
     }

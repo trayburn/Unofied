@@ -61,10 +61,11 @@ public class SiriPlayer implements IPlayer {
                             if(game.isPlayable(e)) {
                                 //    System.out.println("PLaying a strategic card!");
                                 if(e.getColor() == Colors.Wild) {
+                                    myHand.remove(e);
                                     game.playCard(e, Optional.of(getMostCommonColor()), this);
                                     return;
-                                }
-                                {
+                                } else {
+                                    myHand.remove(e);
                                     game.playCard(e, Optional.ofNullable(null), this);
                                     return;
                                 }
@@ -74,17 +75,20 @@ public class SiriPlayer implements IPlayer {
                 }
 
                 if(game.isPlayable(findBestSuggestedCard())) {
+                    var card = findBestSuggestedCard();
                     //     System.out.println("Playing my best card!");
-                    if (findBestSuggestedCard().getColor() == Colors.Wild) {
-                        game.playCard(findBestSuggestedCard(), Optional.of(Colors.Wild), this);
+                    myHand.remove(card);
+                    if (card.getColor() == Colors.Wild) {
+                        game.playCard(card, Optional.of(Colors.Wild), this);
                         return;
                     } else {
-                        game.playCard(findBestSuggestedCard(), Optional.ofNullable(null), this);
+                        game.playCard(card, Optional.ofNullable(null), this);
                         return;
                     }
                 }
                 for(Card e: myHand) {
                     if(game.isPlayable(e)) {
+                        myHand.remove(e);
                         if (e.getColor() == Colors.Wild) {
                             game.playCard(e, Optional.of(getMostCommonColor()), this);
                             return;
