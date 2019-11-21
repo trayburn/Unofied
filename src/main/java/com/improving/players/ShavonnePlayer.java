@@ -63,7 +63,9 @@ public class ShavonnePlayer implements IPlayer {
     @Override
         public Card draw(IGame iGame) {
             var drawnCard = iGame.draw();
-            hand.add(drawnCard);
+            if (drawnCard != null) {
+                hand.add(drawnCard);
+            }
             return drawnCard;
         }
 
@@ -137,4 +139,6 @@ public class ShavonnePlayer implements IPlayer {
             return false;
         }
     }
-    
+
+    //this is a test - i cant update or commit
+
