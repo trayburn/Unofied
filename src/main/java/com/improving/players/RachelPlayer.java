@@ -1,7 +1,6 @@
 package com.improving.players;
 
 import com.improving.game.*;
-import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.function.Function;
@@ -9,14 +8,13 @@ import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toMap;
 
-@Component
-public class Rachel implements IPlayer {
+public class RachelPlayer implements IPlayer {
 
     private final ArrayList<Card> hand = new ArrayList<>();
-    private String name = "Rachel";
+    private String name = "Rachel's Player";
 
-    public Rachel() {    }
-    public Rachel(ArrayList<Card> hand) {
+    public RachelPlayer() {    }
+    public RachelPlayer(ArrayList<Card> hand) {
         this.hand.addAll(hand);
     }
 
@@ -32,7 +30,7 @@ public class Rachel implements IPlayer {
     }
 
     @Override
-    public void newHand(List<Card> cards){
+    public void newHand(List<Card>cards){
         this.hand.clear();
         this.hand.addAll(cards);
     }
@@ -67,7 +65,9 @@ public class Rachel implements IPlayer {
     @Override
     public Card draw(IGame game) {
         Card card = game.draw();
-        hand.add(card);
+        if (card!=null) {
+            hand.add(card);
+        }
         return card;
     }
 
@@ -389,3 +389,4 @@ public class Rachel implements IPlayer {
 //        }
 //        return optimizedCard;
 //    }
+
