@@ -150,6 +150,7 @@ public class Game implements IGame {
             executeCardAction(card, this, playerIndex(1));
         }
 
+
         if (getSumOfCards() != 112)
             throw new RuntimeException(getSumOfCards() + " A card has disappeared from the game.");
 
