@@ -342,13 +342,13 @@ public class RachelPlayer implements IPlayer {
 
     private Boolean hasAction(Card card) {
 
-        if (card.getFace().toString().equalsIgnoreCase("draw4")) {
+        if (card.getFace()==Faces.Draw_4) {
             return true;
-        } else if (card.getFace().toString().equalsIgnoreCase("draw2")) {
+        } else if (card.getFace()==Faces.Draw_2) {
             return true;
-        } else if (card.getFace().toString().equalsIgnoreCase("skip")) {
+        } else if (card.getFace()==Faces.Skip) {
             return true;
-        }else if (card.getFace().toString().equalsIgnoreCase("reverse")) {
+        }else if (card.getFace()==Faces.Reverse) {
             return true;
         }else {
             return false;
@@ -362,7 +362,6 @@ public class RachelPlayer implements IPlayer {
         }
         return isEqual;
     }
-
 
     public void yellUno(){
         System.out.println();
@@ -378,25 +377,4 @@ public class RachelPlayer implements IPlayer {
     }
 
 }
-
-
-
-
-//    public com.improving.Card getMostCommonCardInDiscardPile(com.improving.IGame game) {
-//        //this checks to see if you have a card in your hand that is the same color as the one
-//        //that has been played most often in the game
-//        Map<String, Long> rankedCards = getRankedCards(game);
-//        List<String> cardNames = new ArrayList<>(rankedCards.keySet());
-//        com.improving.Card optimizedCard = new com.improving.Card();
-//
-//        for (int i =cardNames.size()-1;i>=0;i--){
-//            for (com.improving.Card card:this.hand) {
-//                if(!hasAction(card)&& card.toString().equalsIgnoreCase(cardNames.get(i))){ //this may need to be less strict
-//                    optimizedCard = card;
-//                    return optimizedCard;
-//                }
-//            }
-//        }
-//        return optimizedCard;
-//    }
 

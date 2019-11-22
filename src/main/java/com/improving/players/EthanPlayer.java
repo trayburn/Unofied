@@ -9,7 +9,8 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Component
+//@Component
+//TODO: Please fix declaring "Wild" as a color when playing Draw 4 or Wild - this is crashing the game
 public class EthanPlayer implements IPlayer {
     private String name;
     protected LinkedList<Card> hand;
