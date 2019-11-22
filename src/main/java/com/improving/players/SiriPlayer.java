@@ -111,7 +111,12 @@ public class SiriPlayer implements IPlayer {
             this.myHand.addAll(cards);
         }
 
-        public int playBasedOnPlayers(int previous, int next, int nextnext) {
+    @Override
+    public List<Card> getHand() {
+        return myHand;
+    }
+
+    public int playBasedOnPlayers(int previous, int next, int nextnext) {
             if(next <=2) {
                 //      System.out.println("Watch out, next player is almost going to win!");
                 return 1;
