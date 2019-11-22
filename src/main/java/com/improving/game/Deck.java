@@ -10,6 +10,7 @@ import java.util.List;
 public class Deck implements IDeck {
     private List<Card> drawPile = new ArrayList<>();
     private List<Card> discardPile = new ArrayList<>();
+    private Set<Card> allCards = new HashSet<>();
 
     public Deck() {
         Set<Colors> numColorSet = new HashSet<>();
@@ -60,6 +61,7 @@ public class Deck implements IDeck {
                 drawPile.add(new Card(wildFace, wildColor));
             }
         }
+        allCards.addAll(drawPile);
     }
 
     public int getDrawPileSize() {
@@ -74,6 +76,8 @@ public class Deck implements IDeck {
         return drawPile;
     }
 
+    public Set<Card> getAllCards() { return allCards; }
+
     public Card draw() {
         if (drawPile.size() == 0) {
             var topCard = discardPile.get(discardPile.size() - 1);
@@ -83,6 +87,7 @@ public class Deck implements IDeck {
             discardPile.add(topCard);
         }
         shuffle();
+        if (drawPile.size() == 0) return null;
         var newCard = drawPile.get(0);
         drawPile.remove(newCard);
         return newCard;

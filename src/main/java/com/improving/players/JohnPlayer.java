@@ -17,7 +17,7 @@ public class JohnPlayer implements IPlayer {
 
     public void takeTurn(IGame iGame) {
         Card playableCard = findPlayableCard(iGame, hand); //Will return null if there are no valid cards to play.
-        System.out.println("" + getName() + "\'s Current Hand: " + hand);
+
 
         if (playableCard != null) { //If playableCard has a Card, it will then put that card down :)
             hand.remove(playableCard);
@@ -29,9 +29,9 @@ public class JohnPlayer implements IPlayer {
 
 
         } else {
-            System.out.println("No valid card found. Drawing...");
+
             draw(iGame);
-            System.out.println("Seeing if new card can fit");
+
             playableCard = findPlayableCard(iGame, hand); //Will now draw a card and see if that card is valid. If it is, it will play the card.
             if (playableCard != null) {
                 hand.remove(playableCard);
@@ -42,7 +42,7 @@ public class JohnPlayer implements IPlayer {
                     iGame.playCard(playableCard, Optional.ofNullable(null), this);
                 }
             } else {
-                System.out.println("New card can't fit. Turn ended.");
+
 
             }
         }
@@ -115,7 +115,7 @@ public class JohnPlayer implements IPlayer {
 
         public Card draw (IGame iGame){
             hand.add(iGame.draw());
-            System.out.println("Drew Card: " + hand.get(handSize() - 1));
+
             return hand.get(handSize() - 1);
         }
 
@@ -142,7 +142,7 @@ public class JohnPlayer implements IPlayer {
         }
 
 
-        private List<Card> getHand () {
+        public List<Card> getHand () {
             return hand;
         }
 
@@ -192,7 +192,7 @@ public class JohnPlayer implements IPlayer {
                 }
                 else color = Colors.Blue;
 
-                System.out.println("Wild Card Chosen Color: " + color);
+
                 return color;
             }
         }

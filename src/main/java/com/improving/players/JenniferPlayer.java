@@ -6,12 +6,12 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Optional;
 
-//@Component
+
 public class JenniferPlayer implements IPlayer {
     public static int takeTurnCount = 1;
     private final List<Card> handCards;
     private static int gameOverUno = 0;
-    private String name;
+    private String name ="Jennifer";
     Colors mostCommonColor;
     int yellowCommon = 1;
     int blueCommon = 1;
@@ -29,15 +29,19 @@ public class JenniferPlayer implements IPlayer {
         return handCards.size();
     }
 
-    @Override
     public String getName() {
-        return this.toString().replace("com.improving.players.","");
+        return name;
     }
 
 
     public void newHand(List<Card> cards) {
         this.handCards.clear();
         this.getHandCards().addAll(cards);
+    }
+
+    @Override
+    public List<Card> getHand() {
+        return handCards;
     }
 
     public static int getTakeTurnCount() {
@@ -55,6 +59,8 @@ public class JenniferPlayer implements IPlayer {
                 }else
 //                System.out.println(getName() + " played a " + card + " from hand.");
                 playSmartColorCard(game);
+                //TODO:else if previous player hand is < 3 then/and if i have reverse and skip, play it
+
                 return;
             }
         }
@@ -129,6 +135,12 @@ public class JenniferPlayer implements IPlayer {
         if (handCards.contains(Faces.Draw_2) || handCards.contains(Faces.Draw_4)) {
             handCards.remove(card);
             game.playCard(card, Optional.of(choseWildColor(game, card)), this);
+        }else if(handCards.contains(Faces.Skip)){
+            handCards.remove(card);
+            game.playCard(card, Optional.of(choseWildColor(game, card)), this);
+        }else if (handCards.contains(Faces.Reverse)){
+            handCards.remove(card);
+            game.playCard(card, Optional.of(choseWildColor(game, card)), this);
         }
     }
 
@@ -178,6 +190,9 @@ public class JenniferPlayer implements IPlayer {
     @Override
     public Card draw(IGame game) {
         Card card = game.draw();
+        if(card != null){
+            handCards.add(card);
+        }
         return card;
     }
 
@@ -188,4 +203,7 @@ public class JenniferPlayer implements IPlayer {
     public List<Card> getHandCards() {
         return handCards;
     }
+
+
+
 }
