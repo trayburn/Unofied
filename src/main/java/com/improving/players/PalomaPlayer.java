@@ -67,26 +67,6 @@ public class PalomaPlayer implements IPlayer {
         return hand;
     }
 
-//    public void getRidOfCommonColorCard(IGame game) {
-//        for (Card card : hand) {
-//            if (yellowIsCommonColor() == true) {
-//                mostCommonColor = Colors.Yellow;
-//                game.playCard(card, Optional.of(mostCommonColor), this);
-//            } else if (redIsCommonColor() == true) {
-//                mostCommonColor = Colors.Red;
-//                game.playCard(card, Optional.of(mostCommonColor), this);
-//            } else if (greenIsCommonColor() == true) {
-//                mostCommonColor = Colors.Green;
-//                game.playCard(card, Optional.of(mostCommonColor), this);
-//            } else if (blueIsCommonColor() == true) {
-//                mostCommonColor = Colors.Blue;
-//                game.playCard(card, Optional.of(mostCommonColor), this);
-//            }
-//            return;
-//        }
-//        return;
-//    }
-
     private void playCard(Card card, IGame iGame) {
         Colors declaredColor = declareColor(card, iGame);
         hand.remove(card);
