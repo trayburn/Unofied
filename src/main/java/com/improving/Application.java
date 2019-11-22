@@ -18,7 +18,7 @@ public class Application {
 
         while(game.getPlayers().size() > 4) {
             var rIndex = random.nextInt(game.getPlayers().size());
-            if (!game.getPlayers().get(rIndex).getClass().equals(PalomaPlayer.class))
+            if (!game.getPlayers().get(rIndex).getClass().equals(ZachPlayer.class))
                 game.getPlayers().remove(rIndex);
         }
 

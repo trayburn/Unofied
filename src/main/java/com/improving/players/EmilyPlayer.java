@@ -38,7 +38,7 @@ public class EmilyPlayer implements IPlayer {
         for(var card: handCards) {
             System.out.println("handcards are " + handCards);
             int handSize = iGame.getNextPlayer().handSize();
-            //int prevSize = iGame.getPreviousPlayer().handSize();
+            int prevSize = iGame.getPreviousPlayer().handSize();
 
             if(iGame.isPlayable(card)) {
 
@@ -54,7 +54,7 @@ public class EmilyPlayer implements IPlayer {
                     return;
                 }
 
-                if(handSize <= 2   && checkReverseCard(handCards)){
+                if(handSize <= 2  && checkReverseCard(handCards)){
                     var reverseCard = handCards.stream().filter(c->c.getFace() == Faces.Reverse).findFirst().get();
                     playCard(reverseCard, iGame);
                     return;
