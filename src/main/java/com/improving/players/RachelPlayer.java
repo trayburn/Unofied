@@ -308,11 +308,7 @@ public class RachelPlayer implements IPlayer {
                 return optimalCard;
             }
         }
-        //need to figure out how to stream the cards and collect correctly
-//        optimalCard = getMostCommonCardInDiscardPile(game);
-//        if (optimalCard!=null){
-//            return optimalCard;
-//        }
+
         Faces optimalFace = getOptimalFace(game);
         Colors optimalColor = getOptimalColor(game);
         for(Card card:this.hand){
