@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-
+@Component
 public class ShavonnePlayer implements IPlayer {
         private List<Card> hand = new ArrayList<>();
         private final Logger logger;
@@ -72,7 +72,11 @@ public class ShavonnePlayer implements IPlayer {
         private void playCard(Card card, IGame iGame) {
             Colors declaredColor = declareColor(card, iGame);
             hand.remove(card);
-            iGame.playCard(card, Optional.ofNullable(declaredColor), this);
+            if (card.getColor().equals(Colors.Wild)) {
+                iGame.playCard(card, Optional.ofNullable(declaredColor), this);
+            } else {
+                iGame.playCard(card, java.util.Optional.ofNullable(null), this);
+            }
         }
 
 
@@ -140,5 +144,4 @@ public class ShavonnePlayer implements IPlayer {
         }
     }
 
-    //this is a test - i cant update or commit
 
