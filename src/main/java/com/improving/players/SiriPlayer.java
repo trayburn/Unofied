@@ -18,17 +18,6 @@ public class SiriPlayer implements IPlayer {
             this.myHand = myHand;
         }
 
-        public int getId() {
-            return id;
-        }
-
-        public List<Card> getMyHand() {
-            return myHand;
-        }
-
-        public void setMyHand(List<Card> myHand) {
-            this.myHand = myHand;
-        }
 
         @Override
         public Card draw(IGame game) {
@@ -45,10 +34,6 @@ public class SiriPlayer implements IPlayer {
     @Override
     public String getName() {
         return this.name;
-    }
-
-    public void setName(String name) {
-            this.name = name;
     }
 
     @Override
