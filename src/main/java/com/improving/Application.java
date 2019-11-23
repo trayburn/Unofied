@@ -1,7 +1,6 @@
 package com.improving;
 
 import com.improving.game.Game;
-import com.improving.players.EmilyPlayer;
 import com.improving.players.PalomaPlayer;
 import com.improving.players.RachelPlayer;
 import com.improving.players.ZachPlayer;
