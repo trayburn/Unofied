@@ -9,7 +9,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-//@Component
+@Component
 public class EmilyPlayer implements IPlayer {
     private String name;
     private List<Card> handCards;
@@ -36,7 +36,6 @@ public class EmilyPlayer implements IPlayer {
     public void takeTurn(IGame iGame) {
         filterCard(handCards);
         for(var card: handCards) {
-            System.out.println("handcards are " + handCards);
             int handSize = iGame.getNextPlayer().handSize();
             int prevSize = iGame.getPreviousPlayer().handSize();
 
