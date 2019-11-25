@@ -1,12 +1,15 @@
 package com.improving.players;
 
+
 import com.improving.game.*;
 import org.springframework.stereotype.Component;
+
 
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toMap;
+
 
 @Component
 public class RachelPlayer implements IPlayer {
@@ -282,7 +285,7 @@ public class RachelPlayer implements IPlayer {
     }
 
 
-    public Faces getOptimalFace(IGame game) {
+    private Faces getOptimalFace(IGame game) {
         //this checks to see if you have a card in your hand that is the same color as the one
         //that has been played most often in the game
         Map<Faces, Long> rankedFaces = getRankedFaces(game);
@@ -299,6 +302,23 @@ public class RachelPlayer implements IPlayer {
         }
         return optimizedFace;
     }
+
+
+    private HashMap<ArrayList<Card>, Integer> findOptimalPlayCardOrder (ArrayList<Card> hand) {
+        ArrayList<Card> allPermutations = new ArrayList<>();
+        HashMap<ArrayList<Card>, Integer> tally = new HashMap<>();
+        HashMap<ArrayList<Card>, Integer> optimalPlayCardOrder = new HashMap<>();
+
+        Collections permutations =
+
+
+        return optimalPlayCardOrder;
+    }
+
+
+
+
+
     // TODO: need to test this fully
     private Card optimalCardFromHand(IGame game) {
 
