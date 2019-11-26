@@ -7,7 +7,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-
+@Component
 public class SiriPlayer implements IPlayer {
         List<Card> myHand;
         int id;
@@ -18,17 +18,6 @@ public class SiriPlayer implements IPlayer {
             this.myHand = myHand;
         }
 
-        public int getId() {
-            return id;
-        }
-
-        public List<Card> getMyHand() {
-            return myHand;
-        }
-
-        public void setMyHand(List<Card> myHand) {
-            this.myHand = myHand;
-        }
 
         @Override
         public Card draw(IGame game) {
@@ -47,24 +36,35 @@ public class SiriPlayer implements IPlayer {
         return this.name;
     }
 
-    public void setName(String name) {
-            this.name = name;
-    }
-
     @Override
         public void takeTurn(IGame game) {
             if(!this.myHand.isEmpty()) {
                 int playBasedOnPlayer = playBasedOnPlayers(game.getPreviousPlayer().handSize(),game.getNextPlayer().handSize(), game.getNextNextPlayer().handSize());
+
+
+                if(game.isPlayable(findBestSuggestedCard())) {
+                    var card = findBestSuggestedCard();
+                    //     System.out.println("Playing my best card!");
+                    myHand.remove(card);
+                    if (card.getColor() == Colors.Wild) {
+                        game.playCard(card, Optional.of(Colors.Wild), this);
+                        return;
+                    } else {
+                        game.playCard(card, Optional.ofNullable(null), this);
+                        return;
+                    }
+                }
                 if(playBasedOnPlayer == 1) {
                     for(Card e: myHand) {
                         if((e.getFace() == Faces.Reverse) || (e.getFace() == Faces.Draw_4) || (e.getFace() == Faces.Draw_2)) {
                             if(game.isPlayable(e)) {
-                                //    System.out.println("PLaying a strategic card!");
+
                                 if(e.getColor() == Colors.Wild) {
+                                    myHand.remove(e);
                                     game.playCard(e, Optional.of(getMostCommonColor()), this);
                                     return;
-                                }
-                                {
+                                } else {
+                                    myHand.remove(e);
                                     game.playCard(e, Optional.ofNullable(null), this);
                                     return;
                                 }
@@ -72,19 +72,9 @@ public class SiriPlayer implements IPlayer {
                         }
                     }
                 }
-
-                if(game.isPlayable(findBestSuggestedCard())) {
-                    //     System.out.println("Playing my best card!");
-                    if (findBestSuggestedCard().getColor() == Colors.Wild) {
-                        game.playCard(findBestSuggestedCard(), Optional.of(Colors.Wild), this);
-                        return;
-                    } else {
-                        game.playCard(findBestSuggestedCard(), Optional.ofNullable(null), this);
-                        return;
-                    }
-                }
                 for(Card e: myHand) {
                     if(game.isPlayable(e)) {
+                        myHand.remove(e);
                         if (e.getColor() == Colors.Wild) {
                             game.playCard(e, Optional.of(getMostCommonColor()), this);
                             return;

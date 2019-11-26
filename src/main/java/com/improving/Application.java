@@ -1,7 +1,8 @@
 package com.improving;
 
 import com.improving.game.Game;
-import com.improving.players.JenniferPlayer;
+import com.improving.players.PalomaPlayer;
+import com.improving.players.RachelPlayer;
 import com.improving.players.ZachPlayer;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -17,7 +18,7 @@ public class Application {
 
         while(game.getPlayers().size() > 4) {
             var rIndex = random.nextInt(game.getPlayers().size());
-            if (!game.getPlayers().get(rIndex).getClass().equals(JenniferPlayer.class))
+            if (!game.getPlayers().get(rIndex).getClass().equals(ZachPlayer.class))
                 game.getPlayers().remove(rIndex);
         }
 
@@ -25,7 +26,7 @@ public class Application {
             wins.put(p.getName(), 0);
         }
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 10000; i++) {
             try {
                 game.play();
             } catch (Exception e) {

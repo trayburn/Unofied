@@ -12,7 +12,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-@Component
+//@Component
 public class DumbPlayer implements IPlayer {
     private String name;
     private List<Card> handCards = new ArrayList<>();

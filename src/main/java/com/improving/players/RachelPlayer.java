@@ -1,12 +1,15 @@
 package com.improving.players;
 
+
 import com.improving.game.*;
 import org.springframework.stereotype.Component;
+
 
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toMap;
+
 
 @Component
 public class RachelPlayer implements IPlayer {
@@ -282,7 +285,7 @@ public class RachelPlayer implements IPlayer {
     }
 
 
-    public Faces getOptimalFace(IGame game) {
+    private Faces getOptimalFace(IGame game) {
         //this checks to see if you have a card in your hand that is the same color as the one
         //that has been played most often in the game
         Map<Faces, Long> rankedFaces = getRankedFaces(game);
@@ -299,6 +302,23 @@ public class RachelPlayer implements IPlayer {
         }
         return optimizedFace;
     }
+
+
+    private HashMap<ArrayList<Card>, Integer> findOptimalPlayCardOrder (ArrayList<Card> hand) {
+        ArrayList<Card> allPermutations = new ArrayList<>();
+        HashMap<ArrayList<Card>, Integer> tally = new HashMap<>();
+        HashMap<ArrayList<Card>, Integer> optimalPlayCardOrder = new HashMap<>();
+
+        Collections permutations =
+
+
+        return optimalPlayCardOrder;
+    }
+
+
+
+
+
     // TODO: need to test this fully
     private Card optimalCardFromHand(IGame game) {
 
@@ -308,11 +328,7 @@ public class RachelPlayer implements IPlayer {
                 return optimalCard;
             }
         }
-        //need to figure out how to stream the cards and collect correctly
-//        optimalCard = getMostCommonCardInDiscardPile(game);
-//        if (optimalCard!=null){
-//            return optimalCard;
-//        }
+
         Faces optimalFace = getOptimalFace(game);
         Colors optimalColor = getOptimalColor(game);
         for(Card card:this.hand){
@@ -342,13 +358,13 @@ public class RachelPlayer implements IPlayer {
 
     private Boolean hasAction(Card card) {
 
-        if (card.getFace().toString().equalsIgnoreCase("draw4")) {
+        if (card.getFace()==Faces.Draw_4) {
             return true;
-        } else if (card.getFace().toString().equalsIgnoreCase("draw2")) {
+        } else if (card.getFace()==Faces.Draw_2) {
             return true;
-        } else if (card.getFace().toString().equalsIgnoreCase("skip")) {
+        } else if (card.getFace()==Faces.Skip) {
             return true;
-        }else if (card.getFace().toString().equalsIgnoreCase("reverse")) {
+        }else if (card.getFace()==Faces.Reverse) {
             return true;
         }else {
             return false;
@@ -362,7 +378,6 @@ public class RachelPlayer implements IPlayer {
         }
         return isEqual;
     }
-
 
     public void yellUno(){
         System.out.println();
@@ -378,25 +393,4 @@ public class RachelPlayer implements IPlayer {
     }
 
 }
-
-
-
-
-//    public com.improving.Card getMostCommonCardInDiscardPile(com.improving.IGame game) {
-//        //this checks to see if you have a card in your hand that is the same color as the one
-//        //that has been played most often in the game
-//        Map<String, Long> rankedCards = getRankedCards(game);
-//        List<String> cardNames = new ArrayList<>(rankedCards.keySet());
-//        com.improving.Card optimizedCard = new com.improving.Card();
-//
-//        for (int i =cardNames.size()-1;i>=0;i--){
-//            for (com.improving.Card card:this.hand) {
-//                if(!hasAction(card)&& card.toString().equalsIgnoreCase(cardNames.get(i))){ //this may need to be less strict
-//                    optimizedCard = card;
-//                    return optimizedCard;
-//                }
-//            }
-//        }
-//        return optimizedCard;
-//    }
 
