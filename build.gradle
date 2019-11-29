@@ -9,6 +9,7 @@ sourceCompatibility = 11
 
 repositories {
     mavenCentral()
+
 }
 
 test {
@@ -20,4 +21,5 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
     compile group: 'org.springframework', name: 'spring-context', version: '5.2.1.RELEASE'
+    compile group: 'com.google.guava', name: 'guava', version: '14.0'
 }
