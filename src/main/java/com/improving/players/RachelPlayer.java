@@ -1,18 +1,17 @@
 package com.improving.players;
 
 
-import com.google.common.collect.Collections2;
 import com.improving.game.*;
 import org.springframework.stereotype.Component;
+
 
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
 import static java.util.stream.Collectors.toMap;
 
 
-@Component
+//@Component illegal start of expression -- line 312
 public class RachelPlayer implements IPlayer {
 
     private final ArrayList<Card> hand = new ArrayList<>();
@@ -305,151 +304,56 @@ public class RachelPlayer implements IPlayer {
     }
 
 
-    public HashMap<List<Card>, Long> findOptimalPlayCardOrder (List<Card> hand) {
-        Collection<List<Card>> allPermutations = Collections2.permutations(hand);
-        HashMap<List<Card>, Long> tally = new HashMap<>();
-        HashMap<List<Card>, Long> optimalPlayCardOrder = new HashMap<>();
-        long successfulIsPlayableCount = 1; //the first card is always playable
+    private HashMap<ArrayList<Card>, Integer> findOptimalPlayCardOrder (ArrayList<Card> hand) {
+        ArrayList<Card> allPermutations = new ArrayList<>();
+        HashMap<ArrayList<Card>, Integer> tally = new HashMap<>();
+        HashMap<ArrayList<Card>, Integer> optimalPlayCardOrder = new HashMap<>();
 
-        for (List<Card> playOrder : allPermutations) {
-            //this mimics the checks for isplayable
-            //will need to tweak my declare color method/optimal card method to account for picking best card for me...
-            for (int i=1; i<hand.size();i++) {
-                //if this card is wild, it's playable
-                if (playOrder.get(i).getColor() == Colors.Wild||
-                        playOrder.get(i-1).getColor() == Colors.Wild||
-                        playOrder.get(i-1).getColor() == playOrder.get(i).getColor() ||
-                            playOrder.get(i-1).getFace() == playOrder.get(i).getFace()) {
-                        successfulIsPlayableCount++;
-                    }else {break;};
-            }
+        //Collections permutations =
 
-            tally.put(playOrder, successfulIsPlayableCount);
-            successfulIsPlayableCount=1;
-        }
-        optimalPlayCardOrder = tally.entrySet().stream().sorted(Map.Entry.comparingByValue())
-                                    .collect(toMap(Map.Entry::getKey,Map.Entry::getValue,
-                                        (e1,e2)->e1, LinkedHashMap::new));
-                return optimalPlayCardOrder;
-        //remember, that the best orders are at the end of the list...
-        //the index is the (factorial of the handsize)-1
+
+        return optimalPlayCardOrder;
     }
 
-    public Long factorial (int handSize){
-        Long factorial = Long.valueOf(handSize);
-        for (Long i = factorial; i > 1 ; i--) {
-            factorial *=i-1;
-        }
-        return factorial;
-    }
+
 
 
 
     // TODO: need to test this fully
     private Card optimalCardFromHand(IGame game) {
-        HashMap<List<Card>, Long> optimalHandOrder = new HashMap<>();
-        ArrayList<List<Card>> bestCardOrder = new ArrayList<>();
-        Faces optimalFace = getOptimalFace(game);
-        Colors optimalColor = getOptimalColor(game);
 
-        if (useActionCard(game)) {
+        if(useActionCard(game)){
             Card optimalCard = getOptimalActionCard(game);
-            if (optimalCard != null && game.isPlayable(optimalCard)) {
+            if (optimalCard!=null&&game.isPlayable(optimalCard)){
                 return optimalCard;
             }
         }
 
-
-        //if my hand is 7 or fewer cards, see how many cards I can play in a row
-        if (this.handSize() < 8) {
-            optimalHandOrder = findOptimalPlayCardOrder(this.hand);
-        }
-
-        //did the optional card playing order method yield anything useful?
-        //if the handsize is equal to the nubmer of cards that can be played in a row
-        //or, if I can play at least 2 consecutive cards, lets see if those match optimized faces/colors
-        if (optimalHandOrder.containsValue(Long.valueOf(handSize()))||
-                (hand.size()>=3 && optimalHandOrder.containsValue(Long.valueOf(handSize())-1))) {
-            for (var order : optimalHandOrder.keySet()) {
-                if (optimalHandOrder.get(order) == Long.valueOf(handSize())||
-                        optimalHandOrder.get(order) == Long.valueOf(handSize())-1) {
-                    bestCardOrder.add(order);
-                }
-            }
-            Collections.reverse(bestCardOrder);
-        }
-
-        //does the best play order for me start with a card that is also offensive?
-        for (var order : bestCardOrder) {
-                if (order.get(0).getFace() == optimalFace
-                        && order.get(0).getColor() == optimalColor
-                        && game.isPlayable(order.get(0))) {
-                    return order.get(0);
-                }
-        }
-
-        for (var order : bestCardOrder) {
-            if (order.get(0).getFace() == optimalFace
-                    && game.isPlayable(order.get(0))) {
-                return order.get(0);
-            }
-        }
-
-        for (var order : bestCardOrder) {
-            if (order.get(0).getColor() == optimalColor
-                    && game.isPlayable(order.get(0))) {
-                return order.get(0);
-            }
-        }
-
-        if (hand.size()<=2) {
-            for (var order : bestCardOrder) {
-                for (Card card : order) {
-                    if (game.isPlayable(card)) {
-                        return card;
-                    }
-                }
-            }
-        }
-
-        //if the best 2 order depths to play in doesn't yield anything play offensively
-        //chose the card that has the most played color or face (best offence card)
-        for (Card card : this.hand) {
-            if (card.getFace() == optimalFace
-                    && card.getColor() == optimalColor
-                    && game.isPlayable(card)) {
+        Faces optimalFace = getOptimalFace(game);
+        Colors optimalColor = getOptimalColor(game);
+        for(Card card:this.hand){
+            if(card.getFace()==optimalFace
+                    && card.getColor()==optimalColor
+                    &&game.isPlayable(card)){
                 return card;
             }
         }
-        //chose the card that has the most played face
-        for (Card card : this.hand) {
-            if (card.getFace() == optimalFace && game.isPlayable(card)) {
+        for(Card card:this.hand){
+            if(card.getFace()==optimalFace && game.isPlayable(card)){
                 return card;
             }
         }
-        //chose the card that has the most played Color
-        for (Card card : this.hand) {
-            if (card.getColor() == optimalColor && game.isPlayable(card)) {
+        for(Card card:this.hand){
+            if(card.getColor()==optimalColor && game.isPlayable(card)){
                 return card;
             }
         }
-
-        //go back and pick the best card that is playable if you can
-        for (var order : bestCardOrder) {
-            for (Card card : order) {
-                if (game.isPlayable(card)) {
-                    return card;
-                }
-            }
-        }
-        //chose the something that is playable
-        for (Card card : this.hand) {
-            if (game.isPlayable(card)) {
+        for(Card card:this.hand){
+            if (game.isPlayable(card)){
                 return card;
             }
         }
         return null;
-
     }
 
     private Boolean hasAction(Card card) {
@@ -487,7 +391,6 @@ public class RachelPlayer implements IPlayer {
 
         System.out.println();
     }
-
 
 }
 
