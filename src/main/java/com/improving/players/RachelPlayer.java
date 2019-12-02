@@ -364,7 +364,6 @@ public class RachelPlayer implements IPlayer {
             }
         }
 
-
         //if my hand is 7 or fewer cards, see how many cards I can play in a row
         if (this.handSize() < 8) {
             optimalHandOrder = findOptimalPlayCardOrder(this.hand);
@@ -407,7 +406,12 @@ public class RachelPlayer implements IPlayer {
             }
         }
 
-        if (hand.size()<=2) {
+        int num = 2;
+        if(game.getNextPlayer().getName().toString().equalsIgnoreCase("John")){
+            num=5;
+        }
+
+        if (hand.size()<=num) {
             for (var order : bestCardOrder) {
                 for (Card card : order) {
                     if (game.isPlayable(card)) {
@@ -478,6 +482,10 @@ public class RachelPlayer implements IPlayer {
             isEqual = true;
         }
         return isEqual;
+    }
+
+    public void playInfo(Card card, Optional<Colors> color, IPlayerInfo player){
+
     }
 
     public void yellUno(){
