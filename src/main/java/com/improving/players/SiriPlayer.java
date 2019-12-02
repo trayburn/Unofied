@@ -1,13 +1,12 @@
 package com.improving.players;
 
 import com.improving.game.*;
-import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-@Component
+//@Component
 public class SiriPlayer implements IPlayer {
         List<Card> myHand;
         int id;

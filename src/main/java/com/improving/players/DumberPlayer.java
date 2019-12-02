@@ -1,11 +1,9 @@
 package com.improving.players;
 
-import com.improving.Logger;
 import com.improving.game.Card;
 import com.improving.game.Colors;
 import com.improving.game.IGame;
 import com.improving.game.IPlayer;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Collections;

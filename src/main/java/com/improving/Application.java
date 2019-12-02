@@ -18,13 +18,14 @@ public class Application {
             var rIndex = random.nextInt(game.getPlayers().size());
             if (!game.getPlayers().get(rIndex).getClass().equals(RachelPlayer.class))
                 game.getPlayers().remove(rIndex);
+
         }
 
         for(var p : game.getPlayerInfo()) {
             wins.put(p.getName(), 0);
         }
 
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < 1000; i++) {
             try {
                 game.play();
             } catch (Exception e) {

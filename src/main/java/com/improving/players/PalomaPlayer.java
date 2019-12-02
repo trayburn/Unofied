@@ -1,6 +1,5 @@
 package com.improving.players;
 
-import com.improving.Logger;
 import com.improving.game.*;
 import org.springframework.stereotype.Component;
 
