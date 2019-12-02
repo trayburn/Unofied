@@ -12,7 +12,12 @@ import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toMap;
 
 
+
 @Component
+//if this class is not working, make sure you have pulled the newest build.gradle file
+//my player uses the newest dependency
+// compile group: 'com.google.guava', name: 'guava', version: '14.0'
+
 public class RachelPlayer implements IPlayer {
 
     private final ArrayList<Card> hand = new ArrayList<>();
